@@ -94,6 +94,8 @@ class Document
     @_solver
 
   resize: () ->
+    console.log('window resize calling document resize')
+    window.my_document = @
 
     for root in @_roots
       if root.layoutable isnt true
@@ -116,6 +118,8 @@ class Document
       # Once we've found that grab the width of this element
       width = measuring.width()
       height = target_height
+      
+      console.log('document resize, suggesting values to solver: width:' + width +  ' height:' + height)
 
       # Set the constraints on root
       if vars.width?
@@ -127,7 +131,9 @@ class Document
 
     # Finally update everything only once.
     @_solver.update_variables(false)
+    console.log('*** document triggering resize')
     @_solver.trigger('resize')
+    console.log('*** document triggered resize')
 
   clear : () ->
     while @_roots.length > 0
@@ -166,7 +172,25 @@ class Document
     if vars.height?
       @_solver.add_constraint(EQ(vars.height, @_doc_height))
 
+    window.solver = @_solver
+
     @_solver.update_variables()
+
+    make_tester = (_this, solver) ->
+      () -> 
+        s = 'solver '
+        for id, model of _this._all_models
+          if model._width
+            s = s.concat(id + ":")
+            s = s.concat(model._width._value.toFixed(0) + ' ')
+          if model._box_equal_size_top
+            s = s.concat(model._box_equal_size_left._value + '+++' )
+        console.log(s)
+        console.log(solver.num_constraints())
+
+    window.test = make_tester(@, @_solver)
+
+
 
   add_root : (model) ->
     logger.debug("Adding root: #{model}")
@@ -174,7 +198,7 @@ class Document
       return
     @_roots.push(model)
     model.attach_document(@)
-
+    console.log('after root attach document')
     if model.layoutable is true
       @_add_layoutable(model)
 

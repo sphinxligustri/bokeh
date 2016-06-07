@@ -93,9 +93,13 @@ class Box extends LayoutDOM.Model
       'box-cell-align-left' : @_box_cell_align_left
       'box-cell-align-right' : @_box_cell_align_right
     })
+    console.log(@id + " getting constrained_variable")
+    console.log(@id + " " + constrained_variables.width.value() + "  " + constrained_variables.height.value())
     return constrained_variables
 
   get_constraints: () ->
+    console.log(@id + " getting constraints")
+
     # Note we don't got and get constraints from _layout_dom parent.
     constraints = []
 
@@ -106,6 +110,7 @@ class Box extends LayoutDOM.Model
       return constraints
 
     for child in children
+      console.log("Parent " +  @id + " Child " + child.id)
       # Test it's layoutable
       @_test_layoutable(child)
 

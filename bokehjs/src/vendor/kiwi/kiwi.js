@@ -1597,6 +1597,9 @@ var kiwi;
                 var pair = vars.itemAt(i);
                 var rowPair = rows.find(pair.second);
                 if (rowPair !== undefined) {
+                    if (rowPair.second.constant() == 599){
+                        console.log('canvas constant, id:' + rowPair.first._id);
+                    }
                     pair.first.setValue(rowPair.second.constant());
                 } else {
                     pair.first.setValue(0.0);

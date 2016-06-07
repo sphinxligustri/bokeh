@@ -20,7 +20,7 @@ class LayoutDOMView extends BokehView
 
     children = @model.get_layoutable_children()
     @child_views = {}
-    build_views(@child_views, children)
+    build_views(@, @child_views, children)
 
     for child in children
       # Look-up the child_view in @child_views and then append
@@ -34,19 +34,21 @@ class LayoutDOMView extends BokehView
 
     if @model._is_root is true
       resize = () -> $(window).trigger('resize')
-      _.delay(resize, 50)
-      _.delay(resize, 100)
-      _.delay(resize, 200)
+
+      #resize()
+      #_.delay(resize, 1)
+      #_.delay(resize, 200)
 
   bind_bokeh_events: () ->
     @listenTo(@model, 'change', @render)
     @listenTo(@model.document.solver(), 'resize', @render)
 
   render: () ->
-    #logger.debug("#{@model} _dom_left: #{@model._dom_left._value}, _dom_top: #{@model._dom_top._value}")
-    #logger.debug("#{@model} _top: #{@model._top._value}, _right: #{@model._right._value}, _bottom: #{@model._bottom._value}, _left: #{@model._left._value}")
-    #logger.debug("#{@model} _width: #{@model._width._value}, _height: #{@model._height._value}")
-    #logger.debug("#{@model} _width_minus_right: #{@model._width_minus_right._value}, _height_minus_bottom: #{@model._height_minus_bottom._value}")
+    console.log(@model.id + ' :layout_dom RENDER')
+    logger.debug("#{@model} _dom_left: #{@model._dom_left._value}, _dom_top: #{@model._dom_top._value}")
+    logger.debug("#{@model} _top: #{@model._top._value}, _right: #{@model._right._value}, _bottom: #{@model._bottom._value}, _left: #{@model._left._value}")
+    logger.debug("#{@model} _width: #{@model._width._value}, _height: #{@model._height._value}")
+    logger.debug("#{@model} _width_minus_right: #{@model._width_minus_right._value}, _height_minus_bottom: #{@model._height_minus_bottom._value}")
 
     s = @model.document.solver()
 
@@ -103,6 +105,7 @@ class LayoutDOMView extends BokehView
         width: @model._width._value
         height: @model._height._value
       })
+    console.log(@model.id + ' :layout_dom RENDER DONE')
 
   get_height: () ->
     # Subclasses should implement this to explain
@@ -141,6 +144,8 @@ class LayoutDOM extends Model
     @_whitespace_right = new Variable()
 
   get_constraints: () ->
+    console.log(@id + ":layout_dom, getting constraints")
+
     constraints = []
 
     # Make sure things dont squeeze out of their bounding box

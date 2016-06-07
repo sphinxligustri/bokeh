@@ -1,6 +1,6 @@
 _ = require "underscore"
 
-build_views = (view_storage, view_models, options, view_types=[]) ->
+build_views = (caller, view_storage, view_models, options, view_types=[]) ->
   # ## function: build_views
   # convenience function for creating a bunch of views from a spec
   # and storing them in a dictionary keyed off of model id.
@@ -16,7 +16,8 @@ build_views = (view_storage, view_models, options, view_types=[]) ->
   #   the views constructor here, as an 'options' field in the dict
   # * options: any additional option to be used in the construction of views
   # * view_option: array, optional view specific options passed in to the construction of the view
-
+  console.log('Build View called by:')
+  console.log(caller)
   created_views = []
   newmodels = _.filter(view_models, (x) -> return not _.has(view_storage, x.id))
 
@@ -37,6 +38,8 @@ build_views = (view_storage, view_models, options, view_types=[]) ->
   for key in to_remove
     view_storage[key].remove()
     delete view_storage[key]
+  console.log(caller)
+  console.log('Build View done by ^')
 
   return created_views
 

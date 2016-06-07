@@ -80,6 +80,7 @@ class CanvasView extends BokehView
     return
 
   update_constraints: (trigger=true) ->
+    console.log('canvas in update constraints')
     requested_width = @requested_width
     requested_height = @requested_height
 
@@ -90,6 +91,7 @@ class CanvasView extends BokehView
     if requested_width < MIN_SIZE or requested_height < MIN_SIZE
       return
 
+    console.log("Requesting new dims:" + [requested_width, requested_height] + " last requested dims: " + @last_requested_dims)
     if _.isEqual(@last_requested_dims, [requested_width, requested_height])
       return
 
@@ -106,7 +108,8 @@ class CanvasView extends BokehView
     s.add_constraint(@_height_constraint)
 
     @last_requested_dims = [requested_width, requested_height]
-
+    
+    console.log('canvas updating variables ' + trigger)
     s.update_variables(trigger)
 
 class Canvas extends LayoutCanvas.Model

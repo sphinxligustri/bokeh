@@ -18,6 +18,7 @@ class PlotView extends LayoutDOM.View
     super()
 
     if @model.responsive is 'box_ar'
+      console.log('plot rendering and suggesting vlaues')
       [width, height] = @get_width_height()
       s = @model.document.solver()
       s.suggest_value(@model._width, width)
@@ -114,6 +115,8 @@ class Plot extends LayoutDOM.Model
     return edit_variables
 
   get_constraints: () ->
+    console.log(@id + " getting constraints plot")
+
     constraints = super()
 
     if @toolbar_location?

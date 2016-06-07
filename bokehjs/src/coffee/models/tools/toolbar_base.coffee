@@ -20,6 +20,7 @@ class ToolbarBaseView extends LayoutDOM.View
   template: toolbar_template
 
   render: () ->
+    console.log(@model.id + ':Toolbar RENDER, width:' + @model._width._value)
     if @model.responsive != 'fixed'
       @$el.css({
         left: @model._dom_left._value
@@ -50,6 +51,7 @@ class ToolbarBaseView extends LayoutDOM.View
       ul.on('click', (e) -> e.stopPropagation())
       ul.appendTo(button_bar_list)
       anchor.dropdown()
+    console.log(@model.id + ':Toolbar RENDER DONE')
 
     button_bar_list = @$(".bk-button-bar-list[type='help']")
     _.each(@model.get('help'), (item) ->
@@ -92,6 +94,8 @@ class ToolbarBase extends LayoutDOM.Model
     return null
 
   get_constraints: () ->
+    console.log(@id + ": toolbar, getting constraints")
+
     # Get the constraints from widget
     constraints = super()
     # Set the fixed size of toolbar

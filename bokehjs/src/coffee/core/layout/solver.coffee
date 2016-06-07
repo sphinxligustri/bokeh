@@ -32,7 +32,12 @@ class Solver
     @solver._editMap._array.length
 
   update_variables: (trigger=true) ->
+    console.log('solver updating variables')
+    if window.test
+      window.test()
     @solver.updateVariables()
+    if window.test
+      window.test()
     if trigger
       @trigger('layout_update')
 
@@ -49,6 +54,8 @@ class Solver
     @solver.removeEditVariable(variable, strength)
 
   suggest_value: (variable, value) ->
+    console.log('solver suggesting vars: ' + value)
+    console.log(variable)
     @solver.suggestValue(variable, value)
 
 _.extend(Solver.prototype, Backbone.Events)

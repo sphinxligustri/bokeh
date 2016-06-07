@@ -311,13 +311,13 @@ class PlotCanvasView extends Renderer.View
 
     # should only bind events on NEW views and tools
     old_renderers = _.keys(@renderer_views)
-    views = build_views(@renderer_views, renderer_models, @view_options())
+    views = build_views(@, @renderer_views, renderer_models, @view_options())
     renderers_to_remove = _.difference(old_renderers, _.pluck(renderer_models, 'id'))
 
     for id_ in renderers_to_remove
       delete @levels.glyph[id_]
 
-    tool_views = build_views(@tool_views, @mget('toolbar').tools, @view_options())
+    tool_views = build_views(@, @tool_views, @mget('toolbar').tools, @view_options())
 
     for v in views
       level = v.mget('level')
@@ -372,6 +372,7 @@ class PlotCanvasView extends Renderer.View
       logger.warn('could not set initial ranges')
 
   render: (force_canvas=false) ->
+    console.log(@model.id + ':plot_canvas RENDER')
     logger.trace("Plot.render(force_canvas=#{force_canvas})")
 
     if not @model.document?
@@ -469,10 +470,12 @@ class PlotCanvasView extends Renderer.View
       @set_initial_range()
 
     ctx.restore()  # Restore to default state
+    console.log(@model.id + ':plot_canvas RENDER DONE')
 
   resize: () ->
     width = @model._width._value
     height = @model._height._value
+    console.log(@model.id + 'plot_canvas resized called w:' + width + " h:" + height)
 
     @canvas_view.set_dims([width, height], true)
 
@@ -487,7 +490,10 @@ class PlotCanvasView extends Renderer.View
 
   update_constraints: () ->
     s = @model.document.solver()
+    console.log(@model.id + ':plot_canvas starting update_constraints')
 
+    w = @canvas.get('width')
+    console.log(@model.id + ':plot_canvas suggesting values for frame width:' + w )
     # Note: -1 to effectively dilate the canvas by 1px
     s.suggest_value(@frame._width, @canvas.get('width') - 1)
     s.suggest_value(@frame._height, @canvas.get('height') - 1)
@@ -496,6 +502,7 @@ class PlotCanvasView extends Renderer.View
       if view.model.panel?
         update_panel_constraints(view)
 
+    console.log(@model.id + ':plot_canvas updating variables')
     s.update_variables(false)
 
   _render_levels: (ctx, levels, clip_region) ->
@@ -739,6 +746,8 @@ class PlotCanvas extends LayoutDOM.Model
     return edit_variables
 
   get_constraints: () ->
+    console.log(@id + ":plot_canvas starting get_constraints ")
+
     constraints = super()
     constraints = constraints.concat(@_get_constant_constraints())
     constraints = constraints.concat(@_get_side_constraints())
