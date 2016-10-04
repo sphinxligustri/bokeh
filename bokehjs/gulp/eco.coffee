@@ -2,12 +2,11 @@ path = require 'path'
 through = require 'through2'
 gutil = require 'gulp-util'
 coffee = require 'coffee-script'
-eco = require 'eco'
 
-{preprocess} = require "eco/src/preprocessor"
-{indent}     = require "eco/src/util"
+{preprocess} = require "eco/lib/preprocessor"
+{indent}     = require "eco/lib/util"
 
-precompile = (source) ->
+compile = (source) ->
   script = coffee.compile(preprocess(source), {noWrap: true})
 
   return """
@@ -55,7 +54,7 @@ precompile = (source) ->
     }
   """
 
-module.exports = (opt) ->
+eco = (opt) ->
   transform = (file, enc, cb) ->
     if file.isNull()
       return cb(null, file)
@@ -66,7 +65,7 @@ module.exports = (opt) ->
     dest = gutil.replaceExtension(file.path, '.js')
 
     try
-      data = "module.exports = #{precompile(str)};"
+      data = "module.exports = #{compile(str)};"
     catch err
       return cb(new PluginError('gulp-eco', err))
 
@@ -76,3 +75,8 @@ module.exports = (opt) ->
     return cb(null, file)
 
   return through.obj(transform)
+
+module.exports = {
+  compile: compile
+  eco: eco
+}
