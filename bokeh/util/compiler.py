@@ -31,7 +31,7 @@ _plugin_prelude = \
         var exports = Bokeh.require(entry[i]);
 
         if (_.isObject(exports.models)) {
-          Bokeh.Models.register_locations(exports.models);
+          Bokeh.Models.register_models(exports.models);
         }
 
         _.extend(Bokeh, _.omit(exports, "models"));

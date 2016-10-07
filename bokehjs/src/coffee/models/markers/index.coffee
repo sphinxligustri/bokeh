@@ -1,12 +1,12 @@
-import * as M from "./marker"
+import {Marker, MarkerView} from "./marker"
 
 SQ3 = Math.sqrt(3)
 
 generate_marker = (type, f) ->
-  class View extends M.View
+  class View extends MarkerView
     _render_one: f
 
-  class Model extends M.Model
+  class Model extends Marker
     default_view: View
     type: type
 
